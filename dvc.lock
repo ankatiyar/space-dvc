@@ -58,7 +58,7 @@ stages:
     params:
       conf/base/parameters_data_science.yml:
         model_options:
-          test_size: 0.2
+          test_size: 0.5
           random_state: 3
           features:
           - engines
@@ -72,5 +72,5 @@ stages:
     outs:
     - path: data/06_models/regressor.pickle
       hash: md5
-      md5: 3fd85e29f3c544eab86289896a37231d
+      md5: 3fc993983a1302c2e4cecb5eb9a9c899
       size: 758
