@@ -72,4 +72,3 @@ model_input_table:
 regressor:
   type: pickle.PickleDataset
   filepath: data/06_models/regressor.pickle
-  versioned: true

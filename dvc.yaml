@@ -1,0 +1,25 @@
+stages:
+  data_processing:
+    cmd: kedro run --pipeline data_processing
+    deps:
+      - data/01_raw/companies.csv
+      - data/01_raw/reviews.csv
+      - data/01_raw/shuttles.xlsx
+      - src/space_dvc/pipelines/data_processing/nodes.py
+      - src/space_dvc/pipelines/data_processing/pipeline.py
+    outs:
+      - data/02_intermediate/preprocessed_companies.pq
+      - data/02_intermediate/preprocessed_shuttles.pq
+      - data/03_primary/model_input_table.pq
+
+  data_science:
+    cmd: kedro run --pipeline data_science
+    deps:
+      - data/03_primary/model_input_table.pq
+      - src/space_dvc/pipelines/data_science/nodes.py
+      - src/space_dvc/pipelines/data_science/pipeline.py
+    params:
+      - conf/base/parameters_data_science.yml:
+        - model_options
+    outs:
+      - data/06_models/regressor.pickle

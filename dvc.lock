@@ -1,0 +1,76 @@
+schema: '2.0'
+stages:
+  data_processing:
+    cmd: kedro run --pipeline data_processing
+    deps:
+    - path: data/01_raw/companies.csv
+      hash: md5
+      md5: 27232c0437abb21ae79519fec9a24ac8
+      size: 223318
+    - path: data/01_raw/reviews.csv
+      hash: md5
+      md5: 430b6cbc7c2eec7dd0e081a6cb819774
+      size: 588895
+    - path: data/01_raw/shuttles.xlsx
+      hash: md5
+      md5: d1d45b1a807a8e93a79d26b7f4b8ebb9
+      size: 936864
+    - path: src/space_dvc/pipelines/data_processing/nodes.py
+      hash: md5
+      md5: 84f128db1c1685b3513bdf32cc9206af
+      size: 2067
+      isexec: true
+    - path: src/space_dvc/pipelines/data_processing/pipeline.py
+      hash: md5
+      md5: 0bce530c1105748fbddef071da2d3d86
+      size: 918
+      isexec: true
+    outs:
+    - path: data/02_intermediate/preprocessed_companies.pq
+      hash: md5
+      md5: e7560117d362b27beb75af0f03b0ba01
+      size: 83644
+    - path: data/02_intermediate/preprocessed_shuttles.pq
+      hash: md5
+      md5: 9e1159730b09f1195177f19707e68007
+      size: 248352
+    - path: data/03_primary/model_input_table.pq
+      hash: md5
+      md5: 0a574d303062dddd7e3f259154f929de
+      size: 215143
+  data_science:
+    cmd: kedro run --pipeline data_science
+    deps:
+    - path: data/03_primary/model_input_table.pq
+      hash: md5
+      md5: 0a574d303062dddd7e3f259154f929de
+      size: 215143
+    - path: src/space_dvc/pipelines/data_science/nodes.py
+      hash: md5
+      md5: b7e5a9bb3c177507f6f71e62d467fe52
+      size: 1640
+      isexec: true
+    - path: src/space_dvc/pipelines/data_science/pipeline.py
+      hash: md5
+      md5: 7b59238c6e6e7f22a0412084a814caa7
+      size: 842
+      isexec: true
+    params:
+      conf/base/parameters_data_science.yml:
+        model_options:
+          test_size: 0.2
+          random_state: 3
+          features:
+          - engines
+          - passenger_capacity
+          - crew
+          - d_check_complete
+          - moon_clearance_complete
+          - iata_approved
+          - company_rating
+          - review_scores_rating
+    outs:
+    - path: data/06_models/regressor.pickle
+      hash: md5
+      md5: 3fd85e29f3c544eab86289896a37231d
+      size: 758
